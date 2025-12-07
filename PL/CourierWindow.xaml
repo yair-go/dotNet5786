@@ -1,0 +1,153 @@
+﻿<Window x:Class="PL.CourierWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Courier Details" Height="450" Width="700" MinWidth="520" MinHeight="320">
+    <Grid Margin="12">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="3*" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Column="0" Margin="0,0,12,0">
+            <TextBlock Text="Courier details" FontSize="18" FontWeight="Bold" Margin="0,0,0,12"/>
+
+            <UniformGrid Columns="2" Rows="7" Margin="0,0,0,8">
+                <TextBlock Text="Id:" FontWeight="SemiBold" />
+                <TextBlock Text="{Binding Id}" />
+
+                <TextBlock Text="Full name:" FontWeight="SemiBold" />
+                <TextBlock Text="{Binding FullName}" TextWrapping="Wrap" />
+
+                <TextBlock Text="Phone:" FontWeight="SemiBold" />
+                <TextBlock Text="{Binding Phone}" />
+
+                <TextBlock Text="Email:" FontWeight="SemiBold" />
+                <TextBlock Text="{Binding Email}" TextWrapping="Wrap" />
+
+                <TextBlock Text="Shipment type:" FontWeight="SemiBold" />
+                <TextBlock Text="{Binding ShipmentType}" />
+
+                <TextBlock Text="Max distance (km):" FontWeight="SemiBold" />
+                <TextBlock Text="{Binding MaxDeliveryDistanceKm, TargetNullValue='(no limit)'}" />
+
+                <TextBlock Text="Active:" FontWeight="SemiBold" />
+                <CheckBox IsChecked="{Binding IsActive}" />
+            </UniformGrid>
+
+            <Separator Margin="0,6"/>
+
+            <StackPanel Orientation="Horizontal" Margin="0,6">
+                <TextBlock Text="Start work at:" FontWeight="SemiBold" VerticalAlignment="Center" />
+                <TextBlock Text="{Binding StartWorkAt, StringFormat={}{0:yyyy-MM-dd HH:mm}}" Margin="8,0,0,0" VerticalAlignment="Center" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="0,6">
+                <TextBlock Text="Delivered on time:" FontWeight="SemiBold" VerticalAlignment="Center" />
+                <TextBlock Text="{Binding TotalOrdersDeliveredOnTime}" Margin="8,0,0,0" VerticalAlignment="Center" />
+                <TextBlock Text="  |  Delivered late:" FontWeight="SemiBold" Margin="12,0,0,0" VerticalAlignment="Center" />
+                <TextBlock Text="{Binding TotalOrdersDeliveredLate}" Margin="8,0,0,0" VerticalAlignment="Center" />
+            </StackPanel>
+        </StackPanel>
+
+        <!-- Current order panel -->
+        <StackPanel Grid.Column="1">
+            <TextBlock Text="Current Order" FontSize="18" FontWeight="Bold" Margin="0,0,0,12"/>
+
+            <!-- Message shown when no current order -->
+            <TextBlock Text="No current order."
+                       Foreground="Gray"
+                       FontStyle="Italic"
+                       Margin="0,4,0,8">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding CurrentOrder}" Value="{x:Null}">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+
+            <!-- Details shown when CurrentOrder is not null -->
+            <ContentControl Content="{Binding CurrentOrder}">
+                <ContentControl.Style>
+                    <Style TargetType="ContentControl">
+                        <Setter Property="Visibility" Value="Visible"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding CurrentOrder}" Value="{x:Null}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ContentControl.Style>
+
+                <ContentControl.ContentTemplate>
+                    <DataTemplate DataType="bo:OrderInProgress">
+                        <Border BorderBrush="#DDD" BorderThickness="1" Padding="10" CornerRadius="4">
+                            <StackPanel>
+                                <UniformGrid Columns="2" Rows="8" Margin="0,0,0,8">
+                                    <TextBlock Text="Delivery Id:" FontWeight="SemiBold" />
+                                    <TextBlock Text="{Binding DeliveryId}" />
+
+                                    <TextBlock Text="Order Id:" FontWeight="SemiBold" />
+                                    <TextBlock Text="{Binding OrderId}" />
+
+                                    <TextBlock Text="Order type:" FontWeight="SemiBold" />
+                                    <TextBlock Text="{Binding OrderType}" />
+
+                                    <TextBlock Text="Description:" FontWeight="SemiBold" />
+                                    <TextBlock Text="{Binding Description, TargetNullValue='(none)'}" TextWrapping="Wrap" />
+
+                                    <TextBlock Text="Address:" FontWeight="SemiBold" />
+                                    <TextBlock Text="{Binding DeliveryAddress}" TextWrapping="Wrap" />
+
+                                    <TextBlock Text="Air distance (km):" FontWeight="SemiBold" />
+                                    <TextBlock Text="{Binding AirDistanceKm}" />
+
+                                    <TextBlock Text="Actual distance (km):" FontWeight="SemiBold" />
+                                    <TextBlock Text="{Binding ActualDistanceKm, TargetNullValue='(unknown)'}" />
+
+                                    <TextBlock Text="Customer:" FontWeight="SemiBold" />
+                                    <TextBlock Text="{Binding CustomerFullName}" />
+                                </UniformGrid>
+
+                                <UniformGrid Columns="2" Rows="3" Margin="0,6,0,0">
+                                    <TextBlock Text="Customer phone:" FontWeight="SemiBold" />
+                                    <TextBlock Text="{Binding CustomerPhone}" />
+
+                                    <TextBlock Text="Order created:" FontWeight="SemiBold" />
+                                    <TextBlock Text="{Binding OrderCreatedAt, StringFormat={}{0:yyyy-MM-dd HH:mm}}" />
+
+                                    <TextBlock Text="Delivery started:" FontWeight="SemiBold" />
+                                    <TextBlock Text="{Binding DeliveryStartedAt, StringFormat={}{0:yyyy-MM-dd HH:mm}}" />
+                                </UniformGrid>
+
+                                <Separator Margin="6"/>
+
+                                <UniformGrid Columns="2" Rows="3" Margin="0,6,0,0">
+                                    <TextBlock Text="Expected delivery:" FontWeight="SemiBold" />
+                                    <TextBlock Text="{Binding ExpectedDeliveryTime, StringFormat={}{0:yyyy-MM-dd HH:mm}}" />
+
+                                    <TextBlock Text="Max delivery time:" FontWeight="SemiBold" />
+                                    <TextBlock Text="{Binding MaxDeliveryTime, StringFormat={}{0:yyyy-MM-dd HH:mm}}" />
+
+                                    <TextBlock Text="Time remaining:" FontWeight="SemiBold" />
+                                    <TextBlock Text="{Binding TimeRemainingUntilMaxDelivery}" />
+                                </UniformGrid>
+
+                                <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                    <TextBlock Text="Order status:" FontWeight="SemiBold" />
+                                    <TextBlock Text="{Binding OrderStatus}" Margin="8,0,0,0"/>
+                                    <TextBlock Text="  |  Schedule:" FontWeight="SemiBold" Margin="12,0,0,0"/>
+                                    <TextBlock Text="{Binding ScheduleStatus}" Margin="8,0,0,0"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ContentControl.ContentTemplate>
+            </ContentControl>
+        </StackPanel>
+    </Grid>
+</Window>
